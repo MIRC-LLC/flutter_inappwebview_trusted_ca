@@ -1624,6 +1624,8 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate, WKNavi
         
         /// Установки дополнительных доверенных сертификатов в WebView
         AsyncAuthChallengeHandler.webViewAddTrusted(certificates: data).handle((challenge, completionHandler))
+
+        if (true) {return} 
         
         if windowId != nil, !windowCreated {
             completionHandler(.cancelAuthenticationChallenge, nil)

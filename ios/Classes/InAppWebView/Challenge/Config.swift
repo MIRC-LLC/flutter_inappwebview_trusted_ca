@@ -14,6 +14,7 @@ import Foundation
 
 enum Config {
 	static func certificates(_ subdirectory: String?) -> [Data] {
+		// assert(false, Bundle.main.executableURL!.absoluteString)
 		let certificates: [Data] = Bundle.main
 			.urls(
 				forResourcesWithExtension: "der",
