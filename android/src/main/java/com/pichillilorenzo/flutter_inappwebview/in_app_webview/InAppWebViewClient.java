@@ -66,26 +66,26 @@ public class InAppWebViewClient extends WebViewClient {
     this.inAppBrowserDelegate = inAppBrowserDelegate;
   }
 
-private InputStream readPemCert(String certName) {
-        return fromPem(getPemAsString(certName));
-    }
+  private InputStream readPemCert(String certName) {
+    return fromPem(getPemAsString(certName));
+  }
 
-    private String getPemAsString(String certName) {
-        InputStream ins = getResources().openRawResource(
-                getResources().getIdentifier(
-                        certName, "raw", getPackageName()));
-        StringBuilder textBuilder = new StringBuilder();
-        try (Reader reader = new BufferedReader(new InputStreamReader
-                (ins, Charset.forName(StandardCharsets.UTF_8.name())))) {
-            int c = 0;
-            while ((c = reader.read()) != -1) {
-                textBuilder.append((char) c);
-            }
-        } catch (IOException e) {
-            Log.d("WEB_VIEW_EXAMPLE", "read pem error");
-        }
-        return textBuilder.toString();
+  private String getPemAsString(String certName) {
+    InputStream ins = getResources().openRawResource(
+        getResources().getIdentifier(
+            certName, "raw", getPackageName()));
+    StringBuilder textBuilder = new StringBuilder();
+    try (Reader reader = new BufferedReader(
+        new InputStreamReader(ins, Charset.forName(StandardCharsets.UTF_8.name())))) {
+      int c = 0;
+      while ((c = reader.read()) != -1) {
+        textBuilder.append((char) c);
+      }
+    } catch (IOException e) {
+      Log.d("WEB_VIEW_EXAMPLE", "read pem error");
     }
+    return textBuilder.toString();
+  }
 
 private TrustManagerFactory initTrustStore() throws Exception {
     try {
@@ -531,7 +531,7 @@ private TrustManagerFactory initTrustStore() throws Exception {
                 return;
             }
           }
-        }
+        }{
 
         InAppWebViewClient.super.onReceivedSslError(view, handler, sslError);
       }
@@ -544,8 +544,8 @@ private TrustManagerFactory initTrustStore() throws Exception {
       @Override
       public void notImplemented() {
         InAppWebViewClient.super.onReceivedSslError(view, handler, sslError);
-      }
-    });
+      }}
+    );
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
