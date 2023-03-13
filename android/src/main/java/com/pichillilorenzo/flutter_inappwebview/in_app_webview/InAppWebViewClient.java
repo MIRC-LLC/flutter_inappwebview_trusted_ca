@@ -49,6 +49,14 @@ import java.util.regex.Matcher;
 
 import io.flutter.plugin.common.MethodChannel;
 
+import java.security.KeyStore;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+
 public class InAppWebViewClient extends WebViewClient {
 
   protected static final String LOG_TAG = "IAWebViewClient";
@@ -56,6 +64,7 @@ public class InAppWebViewClient extends WebViewClient {
   private final MethodChannel channel;
   private static int previousAuthRequestFailureCount = 0;
   private static List<URLCredential> credentialsProposed = null;
+  private final TrustManagerFactory tmf;
   private final String SUB_CERTIFICATE = "sub";
   private final String ROOT_CERTIFICATE = "root";
 
@@ -64,6 +73,7 @@ public class InAppWebViewClient extends WebViewClient {
 
     this.channel = channel;
     this.inAppBrowserDelegate = inAppBrowserDelegate;
+    this.tmf = initTrustStore();
   }
 
   private InputStream readPemCert(String certName) {
@@ -173,7 +183,7 @@ private TrustManagerFactory initTrustStore() throws Exception {
     channel.invokeMethod("shouldOverrideUrlLoading", navigationAction.toMap(), new MethodChannel.Result() {
       @Override
       public void success(Object response) {
-        if (response != null) {                                                                                                                                           
+        if (response != null) {
           Map<String, Object> responseMap = (Map<String, Object>) response;
           Integer action = (Integer) responseMap.get("action");
           action = action != null ? action : NavigationActionPolicy.CANCEL.rawValue();
@@ -300,7 +310,7 @@ private TrustManagerFactory initTrustStore() throws Exception {
     obj.put("androidIsReload", isReload);
     channel.invokeMethod("onUpdateVisitedHistory", obj);
   }
-  
+
   @RequiresApi(api = Build.VERSION_CODES.M)
   @Override
   public void onReceivedError(WebView view, @NonNull WebResourceRequest request, @NonNull WebResourceError error) {
@@ -492,46 +502,44 @@ private TrustManagerFactory initTrustStore() throws Exception {
                 return;
               case 0:
               default:
-              Log.d("WEB_VIEW_EXAMPLE", "onReceivedSslError");
-                      boolean passVerify = false;
-                      if (error.getPrimaryError() == SslError.SSL_UNTRUSTED) {
-                          SslCertificate cert = error.getCertificate();
-                          String subjectDn = cert.getIssuedTo().getDName();
-                          Log.d("WEB_VIEW_EXAMPLE", "subjectDN: " + subjectDn);
-                          try {
-                              Field f = cert.getClass().getDeclaredField("mX509Certificate");
-                              f.setAccessible(true);
-                              X509Certificate x509 = (X509Certificate) f.get(cert);
-                              X509Certificate[] chain = new X509Certificate[]{x509};
-                              for (TrustManager trustManager : tmf.getTrustManagers()) {
-                                  if (trustManager instanceof X509TrustManager) {
-                                      X509TrustManager x509TrustManager = (X509TrustManager) trustManager;
-                                      try {
-                                          x509TrustManager.checkServerTrusted(chain, "generic");
-                                          passVerify = true;
-                                          break;
-                                      } catch (Exception e) {
-                                          Log.e("WEB_VIEW_EXAMPLE", "verify trustManager failed" + e);
-                                          passVerify = false;
-                                      }
-                                  }
-                              }
-                              Log.d("WEB_VIEW_EXAMPLE", "passVerify: " + passVerify);
-                          } catch (Exception e) {
-                              Log.e("WEB_VIEW_EXAMPLE", "verify cert fail" + e);
-                          }
+                Log.d("WEB_VIEW_EXAMPLE", "onReceivedSslError");
+                boolean passVerify = false;
+                if (error.getPrimaryError() == SslError.SSL_UNTRUSTED) {
+                  SslCertificate cert = error.getCertificate();
+                  String subjectDn = cert.getIssuedTo().getDName();
+                  Log.d("WEB_VIEW_EXAMPLE", "subjectDN: " + subjectDn);
+                  try {
+                    Field f = cert.getClass().getDeclaredField("mX509Certificate");
+                    f.setAccessible(true);
+                    X509Certificate x509 = (X509Certificate) f.get(cert);
+                    X509Certificate[] chain = new X509Certificate[]{x509};
+                    for (TrustManager trustManager : tmf.getTrustManagers()) {
+                      if (trustManager instanceof X509TrustManager) {
+                        X509TrustManager x509TrustManager = (X509TrustManager) trustManager;
+                        try {
+                          x509TrustManager.checkServerTrusted(chain, "generic");
+                          passVerify = true;
+                          break;
+                        } catch (Exception e) {
+                          Log.e("WEB_VIEW_EXAMPLE", "verify trustManager failed" + e);
+                          passVerify = false;
+                        }
                       }
-                      if (passVerify) {
-                          handler.proceed();
-                      } else {
-                          handler.cancel();
-                      }
+                    }
+                    Log.d("WEB_VIEW_EXAMPLE", "passVerify: " + passVerify);
+                  } catch (Exception e) {
+                    Log.e("WEB_VIEW_EXAMPLE", "verify cert fail" + e);
                   }
-                // handler.cancel();
+                }
+                if (passVerify) {
+                  handler.proceed();
+                } else {
+                  handler.cancel();
+                }
                 return;
             }
           }
-        }{
+        }
 
         InAppWebViewClient.super.onReceivedSslError(view, handler, sslError);
       }
