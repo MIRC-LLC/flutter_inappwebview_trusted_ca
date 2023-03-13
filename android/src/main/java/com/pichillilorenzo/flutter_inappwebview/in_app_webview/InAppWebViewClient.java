@@ -3,6 +3,8 @@ package com.pichillilorenzo.flutter_inappwebview.in_app_webview;
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
+import android.os.Bundle;
+import android.util.Base64;
 import android.os.Build;
 import android.os.Message;
 import android.util.Log;
@@ -49,6 +51,15 @@ import java.util.regex.Matcher;
 
 import io.flutter.plugin.common.MethodChannel;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.lang.reflect.Field;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
