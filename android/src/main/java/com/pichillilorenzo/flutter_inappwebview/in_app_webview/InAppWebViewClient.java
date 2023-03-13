@@ -56,6 +56,8 @@ public class InAppWebViewClient extends WebViewClient {
   private final MethodChannel channel;
   private static int previousAuthRequestFailureCount = 0;
   private static List<URLCredential> credentialsProposed = null;
+  private final String SUB_CERTIFICATE = "sub";
+  private final String ROOT_CERTIFICATE = "root";
 
   public InAppWebViewClient(MethodChannel channel, InAppBrowserDelegate inAppBrowserDelegate) {
     super();
@@ -63,6 +65,47 @@ public class InAppWebViewClient extends WebViewClient {
     this.channel = channel;
     this.inAppBrowserDelegate = inAppBrowserDelegate;
   }
+
+private InputStream readPemCert(String certName) {
+        return fromPem(getPemAsString(certName));
+    }
+
+    private String getPemAsString(String certName) {
+        InputStream ins = getResources().openRawResource(
+                getResources().getIdentifier(
+                        certName, "raw", getPackageName()));
+        StringBuilder textBuilder = new StringBuilder();
+        try (Reader reader = new BufferedReader(new InputStreamReader
+                (ins, Charset.forName(StandardCharsets.UTF_8.name())))) {
+            int c = 0;
+            while ((c = reader.read()) != -1) {
+                textBuilder.append((char) c);
+            }
+        } catch (IOException e) {
+            Log.d("WEB_VIEW_EXAMPLE", "read pem error");
+        }
+        return textBuilder.toString();
+    }
+
+private TrustManagerFactory initTrustStore() throws Exception {
+    try {
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        InputStream subIns = readPemCert(SUB_CERTIFICATE);
+        Certificate sub = cf.generateCertificate(subIns);
+        InputStream rootIns = readPemCert(ROOT_CERTIFICATE);
+        Certificate root = cf.generateCertificate(rootIns);
+        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        keyStore.load(null, null);
+        keyStore.setCertificateEntry(SUB_CERTIFICATE, sub);
+        keyStore.setCertificateEntry(ROOT_CERTIFICATE, root);
+        String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+        tmf.init(keyStore);
+        return tmf;
+    } catch (Exception e) {
+        throw new Exception("Error during TrustManagerFactory initialization");
+    }
+}
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   @Override
@@ -449,7 +492,42 @@ public class InAppWebViewClient extends WebViewClient {
                 return;
               case 0:
               default:
-                handler.cancel();
+              Log.d("WEB_VIEW_EXAMPLE", "onReceivedSslError");
+                      boolean passVerify = false;
+                      if (error.getPrimaryError() == SslError.SSL_UNTRUSTED) {
+                          SslCertificate cert = error.getCertificate();
+                          String subjectDn = cert.getIssuedTo().getDName();
+                          Log.d("WEB_VIEW_EXAMPLE", "subjectDN: " + subjectDn);
+                          try {
+                              Field f = cert.getClass().getDeclaredField("mX509Certificate");
+                              f.setAccessible(true);
+                              X509Certificate x509 = (X509Certificate) f.get(cert);
+                              X509Certificate[] chain = new X509Certificate[]{x509};
+                              for (TrustManager trustManager : tmf.getTrustManagers()) {
+                                  if (trustManager instanceof X509TrustManager) {
+                                      X509TrustManager x509TrustManager = (X509TrustManager) trustManager;
+                                      try {
+                                          x509TrustManager.checkServerTrusted(chain, "generic");
+                                          passVerify = true;
+                                          break;
+                                      } catch (Exception e) {
+                                          Log.e("WEB_VIEW_EXAMPLE", "verify trustManager failed" + e);
+                                          passVerify = false;
+                                      }
+                                  }
+                              }
+                              Log.d("WEB_VIEW_EXAMPLE", "passVerify: " + passVerify);
+                          } catch (Exception e) {
+                              Log.e("WEB_VIEW_EXAMPLE", "verify cert fail" + e);
+                          }
+                      }
+                      if (passVerify) {
+                          handler.proceed();
+                      } else {
+                          handler.cancel();
+                      }
+                  }
+                // handler.cancel();
                 return;
             }
           }
