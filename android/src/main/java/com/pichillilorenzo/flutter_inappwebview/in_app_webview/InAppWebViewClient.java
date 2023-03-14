@@ -2,6 +2,7 @@ package com.pichillilorenzo.flutter_inappwebview.in_app_webview;
 
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
+import android.net.http.SslCertificate;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.util.Base64;
