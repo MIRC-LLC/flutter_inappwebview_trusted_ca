@@ -76,7 +76,7 @@ public class InAppWebViewClient extends WebViewClient {
   private final MethodChannel channel;
   private static int previousAuthRequestFailureCount = 0;
   private static List<URLCredential> credentialsProposed = null;
-  private final TrustManagerFactory tmf;
+  private TrustManagerFactory tmf;
   private final String SUB_CERTIFICATE = "-----BEGIN CERTIFICATE-----"
       + "MIIHQjCCBSqgAwIBAgICEAIwDQYJKoZIhvcNAQELBQAwcDELMAkGA1UEBhMCUlUx"
       + "PzA9BgNVBAoMNlRoZSBNaW5pc3RyeSBvZiBEaWdpdGFsIERldmVsb3BtZW50IGFu"
