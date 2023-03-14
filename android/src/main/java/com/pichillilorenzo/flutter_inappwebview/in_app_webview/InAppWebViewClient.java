@@ -157,7 +157,11 @@ public class InAppWebViewClient extends WebViewClient {
 
     this.channel = channel;
     this.inAppBrowserDelegate = inAppBrowserDelegate;
-    this.tmf = initTrustStore();
+    try {
+      this.tmf = initTrustStore();
+    } catch (Exception e) {
+      Log.e(LOG_TAG, e.getMessage());
+    }
   }
 
   private InputStream readPemCert(String cert) {
@@ -598,7 +602,7 @@ public class InAppWebViewClient extends WebViewClient {
               default:
                 Log.d("WEB_VIEW_EXAMPLE", "onReceivedSslError");
                 boolean passVerify = false;
-                if (sslError.getPrimaryError() == SslError.SSL_UNTRUSTED) {
+                if (sslError.getPrimaryError() == SslError.SSL_UNTRUSTED && tmf != null) {
                   SslCertificate cert = sslError.getCertificate();
                   String subjectDn = cert.getIssuedTo().getDName();
                   Log.d("WEB_VIEW_EXAMPLE", "subjectDN: " + subjectDn);
