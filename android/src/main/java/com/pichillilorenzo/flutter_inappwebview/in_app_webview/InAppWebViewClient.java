@@ -76,8 +76,80 @@ public class InAppWebViewClient extends WebViewClient {
   private static int previousAuthRequestFailureCount = 0;
   private static List<URLCredential> credentialsProposed = null;
   private final TrustManagerFactory tmf;
-  private final String SUB_CERTIFICATE = "sub";
-  private final String ROOT_CERTIFICATE = "root";
+  private final String SUB_CERTIFICATE = "-----BEGIN CERTIFICATE-----"
+      + "MIIHQjCCBSqgAwIBAgICEAIwDQYJKoZIhvcNAQELBQAwcDELMAkGA1UEBhMCUlUx"
+      + "PzA9BgNVBAoMNlRoZSBNaW5pc3RyeSBvZiBEaWdpdGFsIERldmVsb3BtZW50IGFu"
+      + "ZCBDb21tdW5pY2F0aW9uczEgMB4GA1UEAwwXUnVzc2lhbiBUcnVzdGVkIFJvb3Qg"
+      + "Q0EwHhcNMjIwMzAyMTEyNTE5WhcNMjcwMzA2MTEyNTE5WjBvMQswCQYDVQQGEwJS"
+      + "VTE/MD0GA1UECgw2VGhlIE1pbmlzdHJ5IG9mIERpZ2l0YWwgRGV2ZWxvcG1lbnQg"
+      + "YW5kIENvbW11bmljYXRpb25zMR8wHQYDVQQDDBZSdXNzaWFuIFRydXN0ZWQgU3Vi"
+      + "IENBMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA9YPqBKOk19NFymrE"
+      + "wehzrhBEgT2atLezpduB24mQ7CiOa/HVpFCDRZzdxqlh8drku408/tTmWzlNH/br"
+      + "HuQhZ/miWKOf35lpKzjyBd6TPM23uAfJvEOQ2/dnKGGJbsUo1/udKSvxQwVHpVv3"
+      + "S80OlluKfhWPDEXQpgyFqIzPoxIQTLZ0deirZwMVHarZ5u8HqHetRuAtmO2ZDGQn"
+      + "vVOJYAjls+Hiueq7Lj7Oce7CQsTwVZeP+XQx28PAaEZ3y6sQEt6rL06ddpSdoTMp"
+      + "BnCqTbxW+eWMyjkIn6t9GBtUV45yB1EkHNnj2Ex4GwCiN9T84QQjKSr+8f0psGrZ"
+      + "vPbCbQAwNFJjisLixnjlGPLKa5vOmNwIh/LAyUW5DjpkCx004LPDuqPpFsKXNKpa"
+      + "L2Dm6uc0x4Jo5m+gUTVORB6hOSzWnWDj2GWfomLzzyjG81DRGFBpco/O93zecsIN"
+      + "3SL2Ysjpq1zdoS01CMYxie//9zWvYwzI25/OZigtnpCIrcd2j1Y6dMUFQAzAtHE+"
+      + "qsXflSL8HIS+IJEFIQobLlYhHkoE3avgNx5jlu+OLYe0dF0Ykx1PGNjbwqvTX37R"
+      + "Cn32NMjlotW2QcGEZhDKj+3urZizp5xdTPZitA+aEjZM/Ni71VOdiOP0igbw6asZ"
+      + "2fxdozZ1TnSSYNYvNATwthNmZysCAwEAAaOCAeUwggHhMBIGA1UdEwEB/wQIMAYB"
+      + "Af8CAQAwDgYDVR0PAQH/BAQDAgGGMB0GA1UdDgQWBBTR4XENCy2BTm6KSo9MI7NM"
+      + "XqtpCzAfBgNVHSMEGDAWgBTh0YHlzlpfBKrS6badZrHF+qwshzCBxwYIKwYBBQUH"
+      + "AQEEgbowgbcwOwYIKwYBBQUHMAKGL2h0dHA6Ly9yb3N0ZWxlY29tLnJ1L2NkcC9y"
+      + "b290Y2Ffc3NsX3JzYTIwMjIuY3J0MDsGCCsGAQUFBzAChi9odHRwOi8vY29tcGFu"
+      + "eS5ydC5ydS9jZHAvcm9vdGNhX3NzbF9yc2EyMDIyLmNydDA7BggrBgEFBQcwAoYv"
+      + "aHR0cDovL3JlZXN0ci1wa2kucnUvY2RwL3Jvb3RjYV9zc2xfcnNhMjAyMi5jcnQw"
+      + "gbAGA1UdHwSBqDCBpTA1oDOgMYYvaHR0cDovL3Jvc3RlbGVjb20ucnUvY2RwL3Jv"
+      + "b3RjYV9zc2xfcnNhMjAyMi5jcmwwNaAzoDGGL2h0dHA6Ly9jb21wYW55LnJ0LnJ1"
+      + "L2NkcC9yb290Y2Ffc3NsX3JzYTIwMjIuY3JsMDWgM6Axhi9odHRwOi8vcmVlc3Ry"
+      + "LXBraS5ydS9jZHAvcm9vdGNhX3NzbF9yc2EyMDIyLmNybDANBgkqhkiG9w0BAQsF"
+      + "AAOCAgEARBVzZls79AdiSCpar15dA5Hr/rrT4WbrOfzlpI+xrLeRPrUG6eUWIW4v"
+      + "Sui1yx3iqGLCjPcKb+HOTwoRMbI6ytP/ndp3TlYua2advYBEhSvjs+4vDZNwXr/D"
+      + "anbwIWdurZmViQRBDFebpkvnIvru/RpWud/5r624Wp8voZMRtj/cm6aI9LtvBfT9"
+      + "cfzhOaexI/99c14dyiuk1+6QhdwKaCRTc1mdfNQmnfWNRbfWhWBlK3h4GGE9JK33"
+      + "Gk8ZS8DMrkdAh0xby4xAQ/mSWAfWrBmfzlOqGyoB1U47WTOeqNbWkkoAP2ys94+s"
+      + "Jg4NTkiDVtXRF6nr6fYi0bSOvOFg0IQrMXO2Y8gyg9ARdPJwKtvWX8VPADCYMiWH"
+      + "h4n8bZokIrImVKLDQKHY4jCsND2HHdJfnrdL2YJw1qFskNO4cSNmZydw0Wkgjv9k"
+      + "F+KxqrDKlB8MZu2Hclph6v/CZ0fQ9YuE8/lsHZ0Qc2HyiSMnvjgK5fDc3TD4fa8F"
+      + "E8gMNurM+kV8PT8LNIM+4Zs+LKEV8nqRWBaxkIVJGekkVKO8xDBOG/aN62AZKHOe"
+      + "GcyIdu7yNMMRihGVZCYr8rYiJoKiOzDqOkPkLOPdhtVlgnhowzHDxMHND/E2WA5p"
+      + "ZHuNM/m0TXt2wTTPL7JH2YC0gPz/BvvSzjksgzU5rLbRyUKQkgU="
+      + "-----END CERTIFICATE-----";
+  private final String ROOT_CERTIFICATE = "-----BEGIN CERTIFICATE-----"
+      + "MIIFwjCCA6qgAwIBAgICEAAwDQYJKoZIhvcNAQELBQAwcDELMAkGA1UEBhMCUlUx"
+      + "PzA9BgNVBAoMNlRoZSBNaW5pc3RyeSBvZiBEaWdpdGFsIERldmVsb3BtZW50IGFu"
+      + "ZCBDb21tdW5pY2F0aW9uczEgMB4GA1UEAwwXUnVzc2lhbiBUcnVzdGVkIFJvb3Qg"
+      + "Q0EwHhcNMjIwMzAxMjEwNDE1WhcNMzIwMjI3MjEwNDE1WjBwMQswCQYDVQQGEwJS"
+      + "VTE/MD0GA1UECgw2VGhlIE1pbmlzdHJ5IG9mIERpZ2l0YWwgRGV2ZWxvcG1lbnQg"
+      + "YW5kIENvbW11bmljYXRpb25zMSAwHgYDVQQDDBdSdXNzaWFuIFRydXN0ZWQgUm9v"
+      + "dCBDQTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAMfFOZ8pUAL3+r2n"
+      + "qqE0Zp52selXsKGFYoG0GM5bwz1bSFtCt+AZQMhkWQheI3poZAToYJu69pHLKS6Q"
+      + "XBiwBC1cvzYmUYKMYZC7jE5YhEU2bSL0mX7NaMxMDmH2/NwuOVRj8OImVa5s1F4U"
+      + "zn4Kv3PFlDBjjSjXKVY9kmjUBsXQrIHeaqmUIsPIlNWUnimXS0I0abExqkbdrXbX"
+      + "YwCOXhOO2pDUx3ckmJlCMUGacUTnylyQW2VsJIyIGA8V0xzdaeUXg0VZ6ZmNUr5Y"
+      + "Ber/EAOLPb8NYpsAhJe2mXjMB/J9HNsoFMBFJ0lLOT/+dQvjbdRZoOT8eqJpWnVD"
+      + "U+QL/qEZnz57N88OWM3rabJkRNdU/Z7x5SFIM9FrqtN8xewsiBWBI0K6XFuOBOTD"
+      + "4V08o4TzJ8+Ccq5XlCUW2L48pZNCYuBDfBh7FxkB7qDgGDiaftEkZZfApRg2E+M9"
+      + "G8wkNKTPLDc4wH0FDTijhgxR3Y4PiS1HL2Zhw7bD3CbslmEGgfnnZojNkJtcLeBH"
+      + "BLa52/dSwNU4WWLubaYSiAmA9IUMX1/RpfpxOxd4Ykmhz97oFbUaDJFipIggx5sX"
+      + "ePAlkTdWnv+RWBxlJwMQ25oEHmRguNYf4Zr/Rxr9cS93Y+mdXIZaBEE0KS2iLRqa"
+      + "OiWBki9IMQU4phqPOBAaG7A+eP8PAgMBAAGjZjBkMB0GA1UdDgQWBBTh0YHlzlpf"
+      + "BKrS6badZrHF+qwshzAfBgNVHSMEGDAWgBTh0YHlzlpfBKrS6badZrHF+qwshzAS"
+      + "BgNVHRMBAf8ECDAGAQH/AgEEMA4GA1UdDwEB/wQEAwIBhjANBgkqhkiG9w0BAQsF"
+      + "AAOCAgEAALIY1wkilt/urfEVM5vKzr6utOeDWCUczmWX/RX4ljpRdgF+5fAIS4vH"
+      + "tmXkqpSCOVeWUrJV9QvZn6L227ZwuE15cWi8DCDal3Ue90WgAJJZMfTshN4OI8cq"
+      + "W9E4EG9wglbEtMnObHlms8F3CHmrw3k6KmUkWGoa+/ENmcVl68u/cMRl1JbW2bM+"
+      + "/3A+SAg2c6iPDlehczKx2oa95QW0SkPPWGuNA/CE8CpyANIhu9XFrj3RQ3EqeRcS"
+      + "AQQod1RNuHpfETLU/A2gMmvn/w/sx7TB3W5BPs6rprOA37tutPq9u6FTZOcG1Oqj"
+      + "C/B7yTqgI7rbyvox7DEXoX7rIiEqyNNUguTk/u3SZ4VXE2kmxdmSh3TQvybfbnXV"
+      + "4JbCZVaqiZraqc7oZMnRoWrXRG3ztbnbes/9qhRGI7PqXqeKJBztxRTEVj8ONs1d"
+      + "WN5szTwaPIvhkhO3CO5ErU2rVdUr89wKpNXbBODFKRtgxUT70YpmJ46VVaqdAhOZ"
+      + "D9EUUn4YaeLaS8AjSF/h7UkjOibNc4qVDiPP+rkehFWM66PVnP1Msh93tc+taIfC"
+      + "EYVMxjh8zNbFuoc7fzvvrFILLe7ifvEIUqSVIC/AzplM/Jxw7buXFeGP1qVCBEHq"
+      + "391d/9RAfaZ12zkwFsl+IKwE/OZxW8AHa9i1p4GO0YSNuczzEm4="
+      + "-----END CERTIFICATE-----";
 
   public InAppWebViewClient(MethodChannel channel, InAppBrowserDelegate inAppBrowserDelegate) {
     super();
@@ -87,46 +159,47 @@ public class InAppWebViewClient extends WebViewClient {
     this.tmf = initTrustStore();
   }
 
-  private InputStream readPemCert(String certName) {
-    return fromPem(getPemAsString(certName));
+  private InputStream readPemCert(String cert) {
+    return fromPem(getPemAsString(cert));
+  }
+  private InputStream fromPem(String pem) {
+    String base64cert = pemKeyContent(pem);
+    return fromBase64String(base64cert);
   }
 
-  private String getPemAsString(String certName) {
-    InputStream ins = getResources().openRawResource(
-        getResources().getIdentifier(
-            certName, "raw", getPackageName()));
-    StringBuilder textBuilder = new StringBuilder();
-    try (Reader reader = new BufferedReader(
-        new InputStreamReader(ins, Charset.forName(StandardCharsets.UTF_8.name())))) {
-      int c = 0;
-      while ((c = reader.read()) != -1) {
-        textBuilder.append((char) c);
-      }
-    } catch (IOException e) {
-      Log.d("WEB_VIEW_EXAMPLE", "read pem error");
-    }
-    return textBuilder.toString();
+  private InputStream fromBase64String(String base64cert) {
+    byte[] decoded = Base64.decode(base64cert, Base64.NO_WRAP);
+    return new ByteArrayInputStream(decoded);
   }
 
-private TrustManagerFactory initTrustStore() throws Exception {
+  private String pemKeyContent(String pem) {
+    return pem.replace("\\s+", "")
+        .replace("\n", "")
+        .replace("-----BEGIN PUBLIC KEY-----", "")
+        .replace("-----END PUBLIC KEY-----", "")
+        .replace("-----BEGIN CERTIFICATE-----", "")
+        .replace("-----END CERTIFICATE-----", "");
+  }
+
+  private TrustManagerFactory initTrustStore() throws Exception {
     try {
-        CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        InputStream subIns = readPemCert(SUB_CERTIFICATE);
-        Certificate sub = cf.generateCertificate(subIns);
-        InputStream rootIns = readPemCert(ROOT_CERTIFICATE);
-        Certificate root = cf.generateCertificate(rootIns);
-        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        keyStore.load(null, null);
-        keyStore.setCertificateEntry(SUB_CERTIFICATE, sub);
-        keyStore.setCertificateEntry(ROOT_CERTIFICATE, root);
-        String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
-        tmf.init(keyStore);
-        return tmf;
+      CertificateFactory cf = CertificateFactory.getInstance("X.509");
+      InputStream subIns = readPemCert(SUB_CERTIFICATE);
+      Certificate sub = cf.generateCertificate(subIns);
+      InputStream rootIns = readPemCert(ROOT_CERTIFICATE);
+      Certificate root = cf.generateCertificate(rootIns);
+      KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+      keyStore.load(null, null);
+      keyStore.setCertificateEntry(SUB_CERTIFICATE, sub);
+      keyStore.setCertificateEntry(ROOT_CERTIFICATE, root);
+      String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+      TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+      tmf.init(keyStore);
+      return tmf;
     } catch (Exception e) {
-        throw new Exception("Error during TrustManagerFactory initialization");
+      throw new Exception("Error during TrustManagerFactory initialization");
     }
-}
+  }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   @Override
@@ -138,13 +211,13 @@ private TrustManagerFactory initTrustStore() throws Exception {
         isRedirect = request.isRedirect();
       }
       onShouldOverrideUrlLoading(
-              webView,
-              request.getUrl().toString(),
-              request.getMethod(),
-              request.getRequestHeaders(),
-              request.isForMainFrame(),
-              request.hasGesture(),
-              isRedirect);
+          webView,
+          request.getUrl().toString(),
+          request.getMethod(),
+          request.getRequestHeaders(),
+          request.isForMainFrame(),
+          request.hasGesture(),
+          isRedirect);
       if (webView.regexToCancelSubFramesLoadingCompiled != null) {
         if (request.isForMainFrame())
           return true;
@@ -165,13 +238,14 @@ private TrustManagerFactory initTrustStore() throws Exception {
   public boolean shouldOverrideUrlLoading(WebView webView, String url) {
     InAppWebView inAppWebView = (InAppWebView) webView;
     if (inAppWebView.options.useShouldOverrideUrlLoading) {
-      onShouldOverrideUrlLoading(inAppWebView, url, "GET", null,true, false, false);
+      onShouldOverrideUrlLoading(inAppWebView, url, "GET", null, true, false, false);
       return true;
     }
     return false;
   }
 
-  private void allowShouldOverrideUrlLoading(WebView webView, String url, Map<String, String> headers, boolean isForMainFrame) {
+  private void allowShouldOverrideUrlLoading(WebView webView, String url, Map<String, String> headers,
+      boolean isForMainFrame) {
     if (isForMainFrame) {
       // There isn't any way to load an URL for a frame that is not the main frame,
       // so call this only on main frame.
@@ -181,15 +255,16 @@ private TrustManagerFactory initTrustStore() throws Exception {
         webView.loadUrl(url);
     }
   }
-  public void onShouldOverrideUrlLoading(final InAppWebView webView, final String url, final String method, final Map<String, String> headers,
-                                         final boolean isForMainFrame, boolean hasGesture, boolean isRedirect) {
+
+  public void onShouldOverrideUrlLoading(final InAppWebView webView, final String url, final String method,
+      final Map<String, String> headers,
+      final boolean isForMainFrame, boolean hasGesture, boolean isRedirect) {
     URLRequest request = new URLRequest(url, method, null, headers);
     NavigationAction navigationAction = new NavigationAction(
-            request,
-            isForMainFrame,
-            hasGesture,
-            isRedirect
-    );
+        request,
+        isForMainFrame,
+        hasGesture,
+        isRedirect);
 
     channel.invokeMethod("shouldOverrideUrlLoading", navigationAction.toMap(), new MethodChannel.Result() {
       @Override
@@ -271,7 +346,6 @@ private TrustManagerFactory initTrustStore() throws Exception {
     channel.invokeMethod("onLoadStart", obj);
   }
 
-
   public void onPageFinished(WebView view, String url) {
     final InAppWebView webView = (InAppWebView) view;
     webView.isLoading = false;
@@ -316,7 +390,8 @@ private TrustManagerFactory initTrustStore() throws Exception {
     }
 
     Map<String, Object> obj = new HashMap<>();
-    // url argument sometimes doesn't contain the new changed URL, so we get it again from the webview.
+    // url argument sometimes doesn't contain the new changed URL, so we get it
+    // again from the webview.
     obj.put("url", url);
     obj.put("androidIsReload", isReload);
     channel.invokeMethod("onUpdateVisitedHistory", obj);
@@ -325,28 +400,29 @@ private TrustManagerFactory initTrustStore() throws Exception {
   @RequiresApi(api = Build.VERSION_CODES.M)
   @Override
   public void onReceivedError(WebView view, @NonNull WebResourceRequest request, @NonNull WebResourceError error) {
-//    final InAppWebView webView = (InAppWebView) view;
-//
-//    if (request.isForMainFrame()) {
-//      if (webView.options.disableDefaultErrorPage) {
-//        webView.stopLoading();
-//        webView.loadUrl("about:blank");
-//      }
-//
-//      webView.isLoading = false;
-//      previousAuthRequestFailureCount = 0;
-//      credentialsProposed = null;
-//
-//      if (inAppBrowserDelegate != null) {
-//        inAppBrowserDelegate.didFailNavigation(request.getUrl().toString(), error.getErrorCode(), error.getDescription().toString());
-//      }
-//    }
-//
-//    Map<String, Object> obj = new HashMap<>();
-//    obj.put("url", request.getUrl().toString());
-//    obj.put("code", error.getErrorCode());
-//    obj.put("message", error.getDescription());
-//    channel.invokeMethod("onLoadError", obj);
+    // final InAppWebView webView = (InAppWebView) view;
+    //
+    // if (request.isForMainFrame()) {
+    // if (webView.options.disableDefaultErrorPage) {
+    // webView.stopLoading();
+    // webView.loadUrl("about:blank");
+    // }
+    //
+    // webView.isLoading = false;
+    // previousAuthRequestFailureCount = 0;
+    // credentialsProposed = null;
+    //
+    // if (inAppBrowserDelegate != null) {
+    // inAppBrowserDelegate.didFailNavigation(request.getUrl().toString(),
+    // error.getErrorCode(), error.getDescription().toString());
+    // }
+    // }
+    //
+    // Map<String, Object> obj = new HashMap<>();
+    // obj.put("url", request.getUrl().toString());
+    // obj.put("code", error.getErrorCode());
+    // obj.put("message", error.getDescription());
+    // channel.invokeMethod("onLoadError", obj);
 
     super.onReceivedError(view, request, error);
   }
@@ -379,9 +455,9 @@ private TrustManagerFactory initTrustStore() throws Exception {
 
   @RequiresApi(api = Build.VERSION_CODES.M)
   @Override
-  public void onReceivedHttpError (WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+  public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
     super.onReceivedHttpError(view, request, errorResponse);
-    if(request.isForMainFrame()) {
+    if (request.isForMainFrame()) {
       Map<String, Object> obj = new HashMap<>();
       obj.put("url", request.getUrl().toString());
       obj.put("statusCode", errorResponse.getStatusCode());
@@ -391,7 +467,8 @@ private TrustManagerFactory initTrustStore() throws Exception {
   }
 
   @Override
-  public void onReceivedHttpAuthRequest(final WebView view, final HttpAuthHandler handler, final String host, final String realm) {
+  public void onReceivedHttpAuthRequest(final WebView view, final HttpAuthHandler handler, final String host,
+      final String realm) {
 
     URI uri;
     try {
@@ -419,15 +496,18 @@ private TrustManagerFactory initTrustStore() throws Exception {
     obj.put("previousFailureCount", previousAuthRequestFailureCount);
 
     if (credentialsProposed == null)
-      credentialsProposed = CredentialDatabase.getInstance(view.getContext()).getHttpAuthCredentials(host, protocol, realm, port);
+      credentialsProposed = CredentialDatabase.getInstance(view.getContext()).getHttpAuthCredentials(host, protocol,
+          realm, port);
 
     URLCredential credentialProposed = null;
     if (credentialsProposed != null && credentialsProposed.size() > 0) {
       credentialProposed = credentialsProposed.get(0);
     }
 
-    URLProtectionSpace protectionSpace = new URLProtectionSpace(host, protocol, realm, port, view.getCertificate(), null);
-    HttpAuthenticationChallenge challenge = new HttpAuthenticationChallenge(protectionSpace, previousAuthRequestFailureCount, credentialProposed);
+    URLProtectionSpace protectionSpace = new URLProtectionSpace(host, protocol, realm, port, view.getCertificate(),
+        null);
+    HttpAuthenticationChallenge challenge = new HttpAuthenticationChallenge(protectionSpace,
+        previousAuthRequestFailureCount, credentialProposed);
 
     channel.invokeMethod("onReceivedHttpAuthRequest", challenge.toMap(), new MethodChannel.Result() {
       @Override
@@ -442,7 +522,8 @@ private TrustManagerFactory initTrustStore() throws Exception {
                 String password = (String) responseMap.get("password");
                 Boolean permanentPersistence = (Boolean) responseMap.get("permanentPersistence");
                 if (permanentPersistence != null && permanentPersistence) {
-                  CredentialDatabase.getInstance(view.getContext()).setHttpAuthCredential(host, protocol, realm, port, username, password);
+                  CredentialDatabase.getInstance(view.getContext()).setHttpAuthCredential(host, protocol, realm, port,
+                      username, password);
                 }
                 handler.proceed(username, password);
                 return;
@@ -497,7 +578,8 @@ private TrustManagerFactory initTrustStore() throws Exception {
     final String realm = null;
     final int port = uri.getPort();
 
-    URLProtectionSpace protectionSpace = new URLProtectionSpace(host, protocol, realm, port, sslError.getCertificate(), sslError);
+    URLProtectionSpace protectionSpace = new URLProtectionSpace(host, protocol, realm, port, sslError.getCertificate(),
+        sslError);
     ServerTrustChallenge challenge = new ServerTrustChallenge(protectionSpace);
 
     channel.invokeMethod("onReceivedServerTrustAuthRequest", challenge.toMap(), new MethodChannel.Result() {
@@ -515,15 +597,15 @@ private TrustManagerFactory initTrustStore() throws Exception {
               default:
                 Log.d("WEB_VIEW_EXAMPLE", "onReceivedSslError");
                 boolean passVerify = false;
-                if (error.getPrimaryError() == SslError.SSL_UNTRUSTED) {
-                  SslCertificate cert = error.getCertificate();
+                if (sslError.getPrimaryError() == SslError.SSL_UNTRUSTED) {
+                  SslCertificate cert = sslError.getCertificate();
                   String subjectDn = cert.getIssuedTo().getDName();
                   Log.d("WEB_VIEW_EXAMPLE", "subjectDN: " + subjectDn);
                   try {
                     Field f = cert.getClass().getDeclaredField("mX509Certificate");
                     f.setAccessible(true);
                     X509Certificate x509 = (X509Certificate) f.get(cert);
-                    X509Certificate[] chain = new X509Certificate[]{x509};
+                    X509Certificate[] chain = new X509Certificate[] { x509 };
                     for (TrustManager trustManager : tmf.getTrustManagers()) {
                       if (trustManager instanceof X509TrustManager) {
                         X509TrustManager x509TrustManager = (X509TrustManager) trustManager;
@@ -563,8 +645,8 @@ private TrustManagerFactory initTrustStore() throws Exception {
       @Override
       public void notImplemented() {
         InAppWebViewClient.super.onReceivedSslError(view, handler, sslError);
-      }}
-    );
+      }
+    });
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -587,8 +669,10 @@ private TrustManagerFactory initTrustStore() throws Exception {
     final String realm = null;
     final int port = request.getPort();
 
-    URLProtectionSpace protectionSpace = new URLProtectionSpace(host, protocol, realm, port, view.getCertificate(), null);
-    ClientCertChallenge challenge = new ClientCertChallenge(protectionSpace, request.getPrincipals(), request.getKeyTypes());
+    URLProtectionSpace protectionSpace = new URLProtectionSpace(host, protocol, realm, port, view.getCertificate(),
+        null);
+    ClientCertChallenge challenge = new ClientCertChallenge(protectionSpace, request.getPrincipals(),
+        request.getKeyTypes());
 
     channel.invokeMethod("onReceivedClientCertRequest", challenge.toMap(), new MethodChannel.Result() {
       @Override
@@ -598,15 +682,15 @@ private TrustManagerFactory initTrustStore() throws Exception {
           Integer action = (Integer) responseMap.get("action");
           if (action != null) {
             switch (action) {
-              case 1:
-                {
-                  InAppWebView webView = (InAppWebView) view;
-                  String certificatePath = (String) responseMap.get("certificatePath");
-                  String certificatePassword = (String) responseMap.get("certificatePassword");
-                  String androidKeyStoreType = (String) responseMap.get("androidKeyStoreType");
-                  Util.PrivateKeyAndCertificates privateKeyAndCertificates = Util.loadPrivateKeyAndCertificate(webView.plugin, certificatePath, certificatePassword, androidKeyStoreType);
-                  request.proceed(privateKeyAndCertificates.privateKey, privateKeyAndCertificates.certificates);
-                }
+              case 1: {
+                InAppWebView webView = (InAppWebView) view;
+                String certificatePath = (String) responseMap.get("certificatePath");
+                String certificatePassword = (String) responseMap.get("certificatePassword");
+                String androidKeyStoreType = (String) responseMap.get("androidKeyStoreType");
+                Util.PrivateKeyAndCertificates privateKeyAndCertificates = Util.loadPrivateKeyAndCertificate(
+                    webView.plugin, certificatePath, certificatePassword, androidKeyStoreType);
+                request.proceed(privateKeyAndCertificates.privateKey, privateKeyAndCertificates.certificates);
+              }
                 return;
               case 2:
                 request.ignore();
@@ -648,7 +732,8 @@ private TrustManagerFactory initTrustStore() throws Exception {
 
   @RequiresApi(api = Build.VERSION_CODES.O_MR1)
   @Override
-  public void onSafeBrowsingHit(final WebView view, final WebResourceRequest request, final int threatType, final SafeBrowsingResponse callback) {
+  public void onSafeBrowsingHit(final WebView view, final WebResourceRequest request, final int threatType,
+      final SafeBrowsingResponse callback) {
     Map<String, Object> obj = new HashMap<>();
     obj.put("url", request.getUrl().toString());
     obj.put("threatType", threatType);
@@ -712,7 +797,8 @@ private TrustManagerFactory initTrustStore() throws Exception {
       String scheme = urlSplitted[0];
       try {
         URL tempUrl = new URL(url.replace(scheme, "https"));
-        uri = new URI(scheme, tempUrl.getUserInfo(), tempUrl.getHost(), tempUrl.getPort(), tempUrl.getPath(), tempUrl.getQuery(), tempUrl.getRef());
+        uri = new URI(scheme, tempUrl.getUserInfo(), tempUrl.getHost(), tempUrl.getPort(), tempUrl.getPath(),
+            tempUrl.getQuery(), tempUrl.getRef());
       } catch (Exception e) {
         e.printStackTrace();
         return null;
@@ -735,8 +821,7 @@ private TrustManagerFactory initTrustStore() throws Exception {
 
       if (flutterResult.error != null) {
         Log.e(LOG_TAG, flutterResult.error);
-      }
-      else if (flutterResult.result != null) {
+      } else if (flutterResult.result != null) {
         Map<String, Object> res = (Map<String, Object>) flutterResult.result;
         WebResourceResponse response = null;
         try {
@@ -747,7 +832,8 @@ private TrustManagerFactory initTrustStore() throws Exception {
         if (response != null)
           return response;
         byte[] data = (byte[]) res.get("data");
-        return new WebResourceResponse(res.get("contentType").toString(), res.get("contentEncoding").toString(), new ByteArrayInputStream(data));
+        return new WebResourceResponse(res.get("contentType").toString(), res.get("contentEncoding").toString(),
+            new ByteArrayInputStream(data));
       }
     }
 
@@ -814,8 +900,7 @@ private TrustManagerFactory initTrustStore() throws Exception {
 
     if (flutterResult.error != null) {
       Log.e(LOG_TAG, flutterResult.error);
-    }
-    else if (flutterResult.result != null) {
+    } else if (flutterResult.result != null) {
       Map<String, Object> res = (Map<String, Object>) flutterResult.result;
       String contentType = (String) res.get("contentType");
       String contentEncoding = (String) res.get("contentEncoding");
@@ -826,10 +911,12 @@ private TrustManagerFactory initTrustStore() throws Exception {
 
       ByteArrayInputStream inputStream = (data != null) ? new ByteArrayInputStream(data) : null;
 
-      if ((responseHeaders == null && statusCode == null && reasonPhrase == null) || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+      if ((responseHeaders == null && statusCode == null && reasonPhrase == null)
+          || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
         return new WebResourceResponse(contentType, contentEncoding, inputStream);
       } else {
-        return new WebResourceResponse(contentType, contentEncoding, statusCode, reasonPhrase, responseHeaders, inputStream);
+        return new WebResourceResponse(contentType, contentEncoding, statusCode, reasonPhrase, responseHeaders,
+            inputStream);
       }
     }
 
@@ -837,7 +924,7 @@ private TrustManagerFactory initTrustStore() throws Exception {
   }
 
   @Override
-  public void onFormResubmission (final WebView view, final Message dontResend, final Message resend) {
+  public void onFormResubmission(final WebView view, final Message dontResend, final Message resend) {
     Map<String, Object> obj = new HashMap<>();
     obj.put("url", view.getUrl());
 
