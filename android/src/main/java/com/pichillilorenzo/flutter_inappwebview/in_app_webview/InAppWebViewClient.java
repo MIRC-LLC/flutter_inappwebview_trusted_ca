@@ -160,7 +160,7 @@ public class InAppWebViewClient extends WebViewClient {
   }
 
   private InputStream readPemCert(String cert) {
-    return fromPem(getPemAsString(cert));
+    return fromPem(cert);
   }
   private InputStream fromPem(String pem) {
     String base64cert = pemKeyContent(pem);
